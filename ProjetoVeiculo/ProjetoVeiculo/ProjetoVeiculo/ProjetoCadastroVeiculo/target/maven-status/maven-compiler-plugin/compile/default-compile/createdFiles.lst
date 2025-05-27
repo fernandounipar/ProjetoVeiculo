@@ -1,0 +1,11 @@
+com\hibernate\projetocadastros\model\Usuario.class
+com\hibernate\projetocadastros\ProjetoCadastros.class
+com\hibernate\projetocadastros\view\FrmMenu.class
+com\hibernate\projetocadastros\view\FrmLogin$2.class
+com\hibernate\projetocadastros\view\FrmMenu$2.class
+com\hibernate\projetocadastros\view\FrmLogin.class
+com\hibernate\projetocadastros\view\FrmLogin$1.class
+com\hibernate\projetocadastros\dao\UsuarioDAO.class
+com\hibernate\projetocadastros\view\FrmMenu$1.class
+com\hibernate\projetocadastros\util\HibernateUtil.class
+com\hibernate\projetocadastros\view\FrmMenu$3.class

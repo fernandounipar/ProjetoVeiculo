@@ -12,28 +12,35 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.io.Serializable;
 
 /**
- * Entidade Veiculo – campos principais conforme layout. Mantém o mesmo
- * padrão usado nas entidades originais (Cliente, Usuario, etc.).
+ * Entidade Veiculo – contém todos os campos do layout de cadastro.
  */
 @Entity
 @Table(name = "veiculo")
 public class Veiculo implements Serializable {
 
+    /* ========== Chave primária ========== */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /* ========== Identificação ========== */
     @Column(length = 8, nullable = false, unique = true)
     private String placa;
 
-    @Column(name = "nr_frota")
-    private Integer nrFrota;
+    /** Situação/Status do veículo (Ex.: ATIVO, VENDIDO, MANUTENCAO) */
+    @Column(length = 20)
+    private String status;
+
+    @Column(length = 60)
+    private String marca;
 
     @Column(length = 60)
     private String modelo;
+
+    @Column(length = 11, unique = true)
+    private String renavam;
 
     @Column(length = 2)
     private String ufPlaca;
@@ -48,6 +55,7 @@ public class Veiculo implements Serializable {
     private Integer anoFab;
     private Integer anoModelo;
 
+    /* ========== Relacionamentos auxiliares ========== */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_id")
     private TipoVeiculo tipoVeiculo;
@@ -56,6 +64,16 @@ public class Veiculo implements Serializable {
     @JoinColumn(name = "cor_id")
     private Cor cor;
 
+    /* ========== Proprietário / Motorista ========== */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "proprietario_id")
+    private Pessoa proprietario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "motorista_id")
+    private Pessoa motorista;
+
+    /* ========== Quilometragens e Datas ========== */
     @Column(precision = 10, scale = 2)
     private BigDecimal kmAtual;
 
@@ -65,19 +83,24 @@ public class Veiculo implements Serializable {
     private LocalDate dtCadastro;
     private LocalDate dtAquisicao;
 
-    /* ==== getters / setters ==== */
-
+    /* ===== Getters / Setters ===== */
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
     public String getPlaca() { return placa; }
     public void setPlaca(String placa) { this.placa = placa; }
 
-    public Integer getNrFrota() { return nrFrota; }
-    public void setNrFrota(Integer nrFrota) { this.nrFrota = nrFrota; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
 
     public String getModelo() { return modelo; }
     public void setModelo(String modelo) { this.modelo = modelo; }
+
+    public String getRenavam() { return renavam; }
+    public void setRenavam(String renavam) { this.renavam = renavam; }
 
     public String getUfPlaca() { return ufPlaca; }
     public void setUfPlaca(String ufPlaca) { this.ufPlaca = ufPlaca; }
@@ -99,6 +122,12 @@ public class Veiculo implements Serializable {
 
     public Cor getCor() { return cor; }
     public void setCor(Cor cor) { this.cor = cor; }
+
+    public Pessoa getProprietario() { return proprietario; }
+    public void setProprietario(Pessoa proprietario) { this.proprietario = proprietario; }
+
+    public Pessoa getMotorista() { return motorista; }
+    public void setMotorista(Pessoa motorista) { this.motorista = motorista; }
 
     public BigDecimal getKmAtual() { return kmAtual; }
     public void setKmAtual(BigDecimal kmAtual) { this.kmAtual = kmAtual; }

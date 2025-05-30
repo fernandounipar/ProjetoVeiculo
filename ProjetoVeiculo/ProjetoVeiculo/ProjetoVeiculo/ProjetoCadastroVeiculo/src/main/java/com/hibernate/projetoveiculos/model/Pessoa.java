@@ -13,8 +13,8 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "motorista")
-public class Motorista implements Serializable {
+@Table(name = "pessoa")
+public class Pessoa implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

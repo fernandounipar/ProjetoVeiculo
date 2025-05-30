@@ -1,25 +1,47 @@
 package com.hibernate.projetoveiculos.view;
 
-import com.hibernate.projetoveiculos.controller.VeiculoController;
-import com.hibernate.projetoveiculos.model.Veiculo;
+import com.hibernate.projetoveiculos.controller.*;
+import com.hibernate.projetoveiculos.model.*;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+
 import javax.swing.table.DefaultTableModel;
 
 /**
- * JInternalFrame – Cadastro de Veículo.
- * Estrutura copiada do FrmClientes e ampliada para todos os campos de Veículo.
+ * JInternalFrame – Cadastro de Veículo (padrão MVC)
  */
 public class FrmVeiculo extends javax.swing.JInternalFrame {
 
     private final VeiculoController controller = new VeiculoController();
+    private final TipoVeiculoController tipoVeiculoController = new TipoVeiculoController();
+    private final CorController corController = new CorController();
+    private final PessoaController pessoaController = new PessoaController();
+    private final MunicipioController municipioController = new MunicipioController();
 
     public FrmVeiculo() {
         initComponents();
+        carregarCombos();
         listarVeiculos();
     }
 
-    /* ======================= CRUD ======================= */
+    private void carregarCombos() {
+        cbMunicipio.removeAllItems();
+        for (Municipio m : municipioController.listar()) cbMunicipio.addItem(m);
+
+        cbCor.removeAllItems();
+        for (Cor c : corController.listar()) cbCor.addItem(c);
+
+        cbTipoVeiculo.removeAllItems();
+        for (TipoVeiculo t : tipoVeiculoController.listar()) cbTipoVeiculo.addItem(t);
+
+        cbProprietario.removeAllItems();
+        cbMotorista.removeAllItems();
+        for (Pessoa p : pessoaController.listar()) {
+            cbProprietario.addItem(p);
+            cbMotorista.addItem(p);
+        }
+    }
+
     private void listarVeiculos() {
         List<Veiculo> lista = controller.listar();
         DefaultTableModel dtm = (DefaultTableModel) tblDados.getModel();
@@ -28,20 +50,20 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
             dtm.addRow(new Object[]{
                 v.getPlaca(),
                 v.getStatus(),
-                v.getMunicipio().getNome(),
+                v.getMunicipio() != null ? v.getMunicipio().getNome() : "",
                 v.getUfPlaca(),
                 v.getMarca(),
                 v.getModelo(),
                 v.getAnoFabricacao(),
                 v.getAnoModelo(),
-                v.getCor(),
+                v.getCor() != null ? v.getCor().getDescricao() : "",
                 v.getChassi(),
                 v.getRenavam(),
-                v.getTipoVeiculo().getDescricao(),
-                v.getProprietario().getId(),
-                v.getProprietario().getNome(),
-                v.getMotorista().getId(),
-                v.getMotorista().getNome()
+                v.getTipoVeiculo() != null ? v.getTipoVeiculo().getDescricao() : "",
+                v.getProprietario() != null ? v.getProprietario().getId() : "",
+                v.getProprietario() != null ? v.getProprietario().getNome() : "",
+                v.getMotorista() != null ? v.getMotorista().getId() : "",
+                v.getMotorista() != null ? v.getMotorista().getNome() : ""
             });
         }
     }
@@ -53,31 +75,26 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
             v.setPlaca(txtPlaca.getText().trim().toUpperCase());
             v.setStatus(txtStatus.getText().trim());
             v.setUfPlaca(txtUF.getText().trim().toUpperCase());
-            v.setMunicipioId(Long.parseLong(txtMunicipio.getText().trim())); // ajuste se for nome
+            v.setMunicipio((Municipio) cbMunicipio.getSelectedItem());
             v.setMarca(txtMarca.getText().trim());
             v.setModelo(txtModelo.getText().trim());
             v.setAnoFabricacao(Integer.parseInt(txtAnoFab.getText().trim()));
             v.setAnoModelo(Integer.parseInt(txtAnoMod.getText().trim()));
-            v.setCor(txtCor.getText().trim());
+            v.setCor((Cor) cbCor.getSelectedItem());
             v.setChassi(txtChassi.getText().trim().toUpperCase());
             v.setRenavam(txtRenavam.getText().trim());
-            v.setTipoVeiculoId(Long.parseLong(txtTipoVeiculo.getText().trim()));
-
-            v.setProprietarioId(Long.parseLong(txtIdProprietario.getText().trim()));
-            v.setProprietarioNome(txtNomeProprietario.getText().trim());
-
-            v.setMotoristaId(Long.parseLong(txtIdMotorista.getText().trim()));
-            v.setMotoristaNome(txtNomeMotorista.getText().trim());
+            v.setTipoVeiculo((TipoVeiculo) cbTipoVeiculo.getSelectedItem());
+            v.setProprietario((Pessoa) cbProprietario.getSelectedItem());
+            v.setMotorista((Pessoa) cbMotorista.getSelectedItem());
 
             controller.salvar(v);
             listarVeiculos();
             JOptionPane.showMessageDialog(this, "Veículo salvo com sucesso!");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao salvar veículo: " + ex.getMessage());
         }
     }
 
-    /* ======================= INIT COMPONENTS ======================= */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
@@ -90,7 +107,7 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
         lblStatus           = new javax.swing.JLabel();
         txtStatus           = new javax.swing.JTextField();
         lblMunicipio        = new javax.swing.JLabel();
-        txtMunicipio        = new javax.swing.JTextField();
+        cbMunicipio         = new javax.swing.JComboBox<>();
         lblUF               = new javax.swing.JLabel();
         txtUF               = new javax.swing.JTextField();
 
@@ -103,24 +120,19 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
         lblAnoMod           = new javax.swing.JLabel();
         txtAnoMod           = new javax.swing.JTextField();
         lblCor              = new javax.swing.JLabel();
-        txtCor              = new javax.swing.JTextField();
+        cbCor               = new javax.swing.JComboBox<>();
 
         lblChassi           = new javax.swing.JLabel();
         txtChassi           = new javax.swing.JTextField();
         lblRenavam          = new javax.swing.JLabel();
         txtRenavam          = new javax.swing.JTextField();
         lblTipoVeiculo      = new javax.swing.JLabel();
-        txtTipoVeiculo      = new javax.swing.JTextField();
+        cbTipoVeiculo       = new javax.swing.JComboBox<>();
 
-        lblIdProprietario   = new javax.swing.JLabel();
-        txtIdProprietario   = new javax.swing.JTextField();
-        lblNomeProprietario = new javax.swing.JLabel();
-        txtNomeProprietario = new javax.swing.JTextField();
-
-        lblIdMotorista      = new javax.swing.JLabel();
-        txtIdMotorista      = new javax.swing.JTextField();
-        lblNomeMotorista    = new javax.swing.JLabel();
-        txtNomeMotorista    = new javax.swing.JTextField();
+        lblProprietario     = new javax.swing.JLabel();
+        cbProprietario      = new javax.swing.JComboBox<>();
+        lblMotorista        = new javax.swing.JLabel();
+        cbMotorista         = new javax.swing.JComboBox<>();
 
         btnSalvar           = new javax.swing.JButton();
 
@@ -142,7 +154,6 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblDados);
 
-        /* ===== Labels ===== */
         lblPlaca.setText("Placa*:");
         lblStatus.setText("Status:");
         lblMunicipio.setText("Município*:");
@@ -155,23 +166,18 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
         lblChassi.setText("Número Chassi:");
         lblRenavam.setText("Renavam*:");
         lblTipoVeiculo.setText("Tipo Veículo*:");
-        lblIdProprietario.setText("ID Proprietário*:");
-        lblNomeProprietario.setText("Nome Proprietário*:");
-        lblIdMotorista.setText("ID Motorista*:");
-        lblNomeMotorista.setText("Nome Motorista*:");
+        lblProprietario.setText("Proprietário*:");
+        lblMotorista.setText("Motorista*:");
 
-        /* ===== Botão ===== */
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(evt -> salvarVeiculo());
 
-        /* ===== Layout ===== */
         javax.swing.GroupLayout painelFormLayout = new javax.swing.GroupLayout(painelForm);
         painelForm.setLayout(painelFormLayout);
 
         painelFormLayout.setHorizontalGroup(
             painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelFormLayout.createSequentialGroup().addContainerGap()
-                /* ---- 1ª Linha ---- */
                 .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(painelFormLayout.createSequentialGroup()
                         .addComponent(lblPlaca).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -181,11 +187,10 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
                         .addComponent(txtStatus, 80, 80, 80)
                         .addGap(18)
                         .addComponent(lblMunicipio).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMunicipio, 120, 120, 120)
+                        .addComponent(cbMunicipio, 120, 120, 120)
                         .addGap(18)
                         .addComponent(lblUF).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtUF, 30, 30, 30))
-                    /* ---- 2ª Linha ---- */
                     .addGroup(painelFormLayout.createSequentialGroup()
                         .addComponent(lblMarca).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtMarca, 100, 100, 100)
@@ -200,8 +205,7 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
                         .addComponent(txtAnoMod, 60, 60, 60)
                         .addGap(18)
                         .addComponent(lblCor).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCor, 80, 80, 80))
-                    /* ---- 3ª Linha ---- */
+                        .addComponent(cbCor, 80, 80, 80))
                     .addGroup(painelFormLayout.createSequentialGroup()
                         .addComponent(lblChassi).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtChassi, 180, 180, 180)
@@ -210,60 +214,45 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
                         .addComponent(txtRenavam, 100, 100, 100)
                         .addGap(18)
                         .addComponent(lblTipoVeiculo).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTipoVeiculo, 80, 80, 80))
-                    /* ---- 4ª Linha ---- */
+                        .addComponent(cbTipoVeiculo, 120, 120, 120))
                     .addGroup(painelFormLayout.createSequentialGroup()
-                        .addComponent(lblIdProprietario).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIdProprietario, 60, 60, 60)
+                        .addComponent(lblProprietario).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbProprietario, 160, 160, 160)
                         .addGap(18)
-                        .addComponent(lblNomeProprietario).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtNomeProprietario, 160, 160, 160)
-                        .addGap(18)
-                        .addComponent(lblIdMotorista).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIdMotorista, 60, 60, 60)
-                        .addGap(18)
-                        .addComponent(lblNomeMotorista).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtNomeMotorista, 160, 160, 160))
-                    /* ---- Botão ---- */
+                        .addComponent(lblMotorista).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbMotorista, 160, 160, 160))
                     .addComponent(btnSalvar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         painelFormLayout.setVerticalGroup(
             painelFormLayout.createSequentialGroup().addContainerGap()
-                /* 1ª linha */
                 .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPlaca)  .addComponent(txtPlaca)
                     .addComponent(lblStatus) .addComponent(txtStatus)
-                    .addComponent(lblMunicipio) .addComponent(txtMunicipio)
+                    .addComponent(lblMunicipio) .addComponent(cbMunicipio)
                     .addComponent(lblUF)  .addComponent(txtUF))
                 .addGap(8)
-                /* 2ª linha */
                 .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMarca) .addComponent(txtMarca)
                     .addComponent(lblModelo).addComponent(txtModelo)
                     .addComponent(lblAnoFab).addComponent(txtAnoFab)
                     .addComponent(lblAnoMod).addComponent(txtAnoMod)
-                    .addComponent(lblCor)   .addComponent(txtCor))
+                    .addComponent(lblCor)   .addComponent(cbCor))
                 .addGap(8)
-                /* 3ª linha */
                 .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblChassi) .addComponent(txtChassi)
                     .addComponent(lblRenavam).addComponent(txtRenavam)
-                    .addComponent(lblTipoVeiculo).addComponent(txtTipoVeiculo))
+                    .addComponent(lblTipoVeiculo).addComponent(cbTipoVeiculo))
                 .addGap(8)
-                /* 4ª linha */
                 .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblIdProprietario).addComponent(txtIdProprietario)
-                    .addComponent(lblNomeProprietario).addComponent(txtNomeProprietario)
-                    .addComponent(lblIdMotorista).addComponent(txtIdMotorista)
-                    .addComponent(lblNomeMotorista).addComponent(txtNomeMotorista))
+                    .addComponent(lblProprietario).addComponent(cbProprietario)
+                    .addComponent(lblMotorista).addComponent(cbMotorista))
                 .addGap(12)
                 .addComponent(btnSalvar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        /* ===== Frame Layout ===== */
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -282,17 +271,22 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>                        
 
-    /* ========== Declaração de Variáveis ========== */
+    // ==== Declaração de variáveis ==== //
     private javax.swing.JButton btnSalvar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblDados;
     private javax.swing.JPanel painelForm;
 
     private javax.swing.JLabel lblPlaca, lblStatus, lblMunicipio, lblUF, lblMarca, lblModelo,
-                               lblAnoFab, lblAnoMod, lblCor, lblChassi, lblRenavam, lblTipoVeiculo,
-                               lblIdProprietario, lblNomeProprietario, lblIdMotorista, lblNomeMotorista;
+            lblAnoFab, lblAnoMod, lblCor, lblChassi, lblRenavam, lblTipoVeiculo,
+            lblProprietario, lblMotorista;
 
-    private javax.swing.JTextField txtPlaca, txtStatus, txtMunicipio, txtUF, txtMarca, txtModelo,
-                                   txtAnoFab, txtAnoMod, txtCor, txtChassi, txtRenavam, txtTipoVeiculo,
-                                   txtIdProprietario, txtNomeProprietario, txtIdMotorista, txtNomeMotorista;
+    private javax.swing.JTextField txtPlaca, txtStatus, txtUF, txtMarca, txtModelo,
+            txtAnoFab, txtAnoMod, txtChassi, txtRenavam;
+
+    private javax.swing.JComboBox<Municipio> cbMunicipio;
+    private javax.swing.JComboBox<Cor> cbCor;
+    private javax.swing.JComboBox<TipoVeiculo> cbTipoVeiculo;
+    private javax.swing.JComboBox<Pessoa> cbProprietario;
+    private javax.swing.JComboBox<Pessoa> cbMotorista;
 }

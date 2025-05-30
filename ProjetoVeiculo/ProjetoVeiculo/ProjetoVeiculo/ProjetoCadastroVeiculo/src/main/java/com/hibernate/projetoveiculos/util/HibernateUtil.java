@@ -3,7 +3,7 @@ package com.hibernate.projetoveiculos.util;
 import com.hibernate.projetoveiculos.model.Cor;
 import com.hibernate.projetoveiculos.model.Usuario;
 import com.hibernate.projetoveiculos.model.Veiculo;
-import com.hibernate.projetoveiculos.model.Motorista;
+import com.hibernate.projetoveiculos.model.Pessoa;
 import com.hibernate.projetoveiculos.model.Municipio;
 import com.hibernate.projetoveiculos.model.TipoVeiculo;
 import java.util.Properties;
@@ -25,7 +25,7 @@ public class HibernateUtil {
             settings.put(AvailableSettings.JAKARTA_JDBC_DRIVER, "org.postgresql.Driver");
             settings.put(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:postgresql://localhost:5432/veiculo");
             settings.put(AvailableSettings.JAKARTA_JDBC_USER, "postgres");
-            settings.put(AvailableSettings.JAKARTA_JDBC_PASSWORD, "123");
+            settings.put(AvailableSettings.JAKARTA_JDBC_PASSWORD, "1234");
             settings.put(AvailableSettings.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
             settings.put(AvailableSettings.HBM2DDL_AUTO, "update");
             settings.put(AvailableSettings.SHOW_SQL, "true");
@@ -35,7 +35,7 @@ public class HibernateUtil {
             configuration.setProperties(settings);
             configuration.addAnnotatedClass(Cor.class);
             configuration.addAnnotatedClass(Usuario.class);
-            configuration.addAnnotatedClass(Motorista.class);
+            configuration.addAnnotatedClass(Pessoa.class);
             configuration.addAnnotatedClass(Municipio.class);
             configuration.addAnnotatedClass(TipoVeiculo.class);
             configuration.addAnnotatedClass(Veiculo.class);

@@ -45,7 +45,7 @@ public class FrmMenu extends javax.swing.JFrame {
 
         switch (cadastro) {
             case "Veículo" -> frame = new FrmVeiculo();              // você criará depois
-            case "Motorista / Proprietário" -> frame = new FrmMotorista();
+            case "Motorista / Proprietário" -> frame = new FrmPessoa();
             case "Município / Cidade" -> frame = new FrmMunicipio();
             case "Cor" -> frame = new FrmCor();
             case "Tipo de Veículo" -> frame = new FrmTipoVeiculo();

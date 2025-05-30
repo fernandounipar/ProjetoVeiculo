@@ -1,35 +1,21 @@
 package com.hibernate.projetoveiculos.model;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
-/**
- * Entidade Veiculo – contém todos os campos do layout de cadastro.
- */
 @Entity
 @Table(name = "veiculo")
 public class Veiculo implements Serializable {
 
-    /* ========== Chave primária ========== */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /* ========== Identificação ========== */
     @Column(length = 8, nullable = false, unique = true)
     private String placa;
 
-    /** Situação/Status do veículo (Ex.: ATIVO, VENDIDO, MANUTENCAO) */
     @Column(length = 20)
     private String status;
 
@@ -52,19 +38,20 @@ public class Veiculo implements Serializable {
     @Column(length = 17, unique = true)
     private String chassi;
 
-    private Integer anoFab;
+    @Column(name = "ano_fabricacao")
+    private Integer anoFabricacao;
+
+    @Column(name = "ano_modelo")
     private Integer anoModelo;
 
-    /* ========== Relacionamentos auxiliares ========== */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tipo_id")
+    @JoinColumn(name = "tipo_veiculo_id")
     private TipoVeiculo tipoVeiculo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cor_id")
     private Cor cor;
 
-    /* ========== Proprietário / Motorista ========== */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proprietario_id")
     private Pessoa proprietario;
@@ -73,7 +60,6 @@ public class Veiculo implements Serializable {
     @JoinColumn(name = "motorista_id")
     private Pessoa motorista;
 
-    /* ========== Quilometragens e Datas ========== */
     @Column(precision = 10, scale = 2)
     private BigDecimal kmAtual;
 
@@ -83,7 +69,8 @@ public class Veiculo implements Serializable {
     private LocalDate dtCadastro;
     private LocalDate dtAquisicao;
 
-    /* ===== Getters / Setters ===== */
+    // ==== Getters e Setters ==== //
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -111,8 +98,8 @@ public class Veiculo implements Serializable {
     public String getChassi() { return chassi; }
     public void setChassi(String chassi) { this.chassi = chassi; }
 
-    public Integer getAnoFab() { return anoFab; }
-    public void setAnoFab(Integer anoFab) { this.anoFab = anoFab; }
+    public Integer getAnoFabricacao() { return anoFabricacao; }
+    public void setAnoFabricacao(Integer anoFabricacao) { this.anoFabricacao = anoFabricacao; }
 
     public Integer getAnoModelo() { return anoModelo; }
     public void setAnoModelo(Integer anoModelo) { this.anoModelo = anoModelo; }

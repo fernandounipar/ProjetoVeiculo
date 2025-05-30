@@ -1,7 +1,7 @@
 package com.hibernate.projetoveiculos.view;
 
-import com.hibernate.projetoveiculos.controller.MotoristaController;
-import com.hibernate.projetoveiculos.model.Motorista;
+import com.hibernate.projetoveiculos.controller.PessoaController;
+import com.hibernate.projetoveiculos.model.Pessoa;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -9,27 +9,27 @@ import javax.swing.table.DefaultTableModel;
 /**
  * JInternalFrame – Cadastro de Motorista / Proprietário.
  */
-public class FrmMotorista extends javax.swing.JInternalFrame {
+public class FrmPessoa extends javax.swing.JInternalFrame {
 
-    private final MotoristaController controller = new MotoristaController();
+    private final PessoaController controller = new PessoaController();
 
-    public FrmMotorista() {
+    public FrmPessoa() {
         initComponents();
         listar();
     }
 
     private void listar() {
-        List<Motorista> lista = controller.listar();
+        List<Pessoa> lista = controller.listar();
         DefaultTableModel dtm = (DefaultTableModel) tblDados.getModel();
         dtm.setRowCount(0);
-        for (Motorista m : lista) {
+        for (Pessoa m : lista) {
             dtm.addRow(new Object[]{m.getNome(), m.getCpf(), m.getMunicipio().getNome()});
         }
     }
 
     private void salvar() {
         try {
-            Motorista m = new Motorista();
+            Pessoa m = new Pessoa();
             m.setNome(txtNome.getText());
             m.setCpf(txtCpf.getText());
             // TODO: demais campos

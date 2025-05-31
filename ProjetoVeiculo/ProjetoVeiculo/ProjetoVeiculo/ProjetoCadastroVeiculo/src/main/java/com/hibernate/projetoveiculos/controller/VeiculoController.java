@@ -6,8 +6,7 @@ import java.util.List;
 
 /**
  * Controller para a entidade Veiculo.
- * Repete o mesmo padrão do ClienteController original: delega as operações
- * CRUD ao respectivo DAO, sem regras de negócio adicionais.
+ * Repete o padrão de delegar operações CRUD ao respectivo DAO.
  */
 public class VeiculoController {
 

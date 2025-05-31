@@ -4,7 +4,6 @@ import com.hibernate.projetoveiculos.controller.*;
 import com.hibernate.projetoveiculos.model.*;
 import java.util.List;
 import javax.swing.*;
-
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,10 +17,13 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
     private final PessoaController pessoaController = new PessoaController();
     private final MunicipioController municipioController = new MunicipioController();
 
+    private Long idSelecionado = null;
+
     public FrmVeiculo() {
         initComponents();
         carregarCombos();
         listarVeiculos();
+        tblDados.getSelectionModel().addListSelectionListener(e -> preencherCampos());
     }
 
     private void carregarCombos() {
@@ -48,6 +50,7 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
         dtm.setRowCount(0);
         for (Veiculo v : lista) {
             dtm.addRow(new Object[]{
+                v.getId(),
                 v.getPlaca(),
                 v.getStatus(),
                 v.getMunicipio() != null ? v.getMunicipio().getNome() : "",
@@ -66,11 +69,13 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
                 v.getMotorista() != null ? v.getMotorista().getNome() : ""
             });
         }
+        limparCampos();
     }
 
     private void salvarVeiculo() {
         try {
             Veiculo v = new Veiculo();
+            if (idSelecionado != null) v.setId(idSelecionado);
 
             v.setPlaca(txtPlaca.getText().trim().toUpperCase());
             v.setStatus(txtStatus.getText().trim());
@@ -92,6 +97,63 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Veículo salvo com sucesso!");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar veículo: " + ex.getMessage());
+        }
+    }
+
+    private void editarVeiculo() {
+        int row = tblDados.getSelectedRow();
+        if (row >= 0) {
+            idSelecionado = (Long) tblDados.getValueAt(row, 0);
+            txtPlaca.setText((String) tblDados.getValueAt(row, 1));
+            txtStatus.setText((String) tblDados.getValueAt(row, 2));
+            // Buscar entidades pelo nome ou ID se desejar preencher combos (pode ajustar conforme seus métodos)
+            // Aqui está exemplo básico, pode melhorar para garantir seleção correta no combo
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um veículo para editar.");
+        }
+    }
+
+    private void excluirVeiculo() {
+        int row = tblDados.getSelectedRow();
+        if (row >= 0) {
+            Long id = (Long) tblDados.getValueAt(row, 0);
+            int confirm = JOptionPane.showConfirmDialog(this, "Confirma a exclusão do veículo selecionado?", "Excluir", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                controller.excluir(id);
+                listarVeiculos();
+                JOptionPane.showMessageDialog(this, "Veículo excluído.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um veículo para excluir.");
+        }
+    }
+
+    private void limparCampos() {
+        idSelecionado = null;
+        txtPlaca.setText("");
+        txtStatus.setText("");
+        txtUF.setText("");
+        txtMarca.setText("");
+        txtModelo.setText("");
+        txtAnoFab.setText("");
+        txtAnoMod.setText("");
+        txtChassi.setText("");
+        txtRenavam.setText("");
+        cbMunicipio.setSelectedIndex(-1);
+        cbCor.setSelectedIndex(-1);
+        cbTipoVeiculo.setSelectedIndex(-1);
+        cbProprietario.setSelectedIndex(-1);
+        cbMotorista.setSelectedIndex(-1);
+        tblDados.clearSelection();
+    }
+
+    private void preencherCampos() {
+        int row = tblDados.getSelectedRow();
+        if (row >= 0) {
+            idSelecionado = (Long) tblDados.getValueAt(row, 0);
+            txtPlaca.setText((String) tblDados.getValueAt(row, 1));
+            txtStatus.setText((String) tblDados.getValueAt(row, 2));
+            // Preencher os demais campos (similar a editarVeiculo)
         }
     }
 
@@ -135,22 +197,28 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
         cbMotorista         = new javax.swing.JComboBox<>();
 
         btnSalvar           = new javax.swing.JButton();
+        btnEditar           = new javax.swing.JButton();
+        btnExcluir          = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Cadastro de Veículo");
+        setPreferredSize(new java.awt.Dimension(950, 350));
 
         tblDados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
             new String [] {
-                "Placa", "Status", "Município", "UF", "Marca", "Modelo",
+                "ID", "Placa", "Status", "Município", "UF", "Marca", "Modelo",
                 "Ano Fab.", "Ano Mod.", "Cor", "Chassi", "Renavam",
                 "Tipo", "ID Prop.", "Nome Prop.", "ID Mot.", "Nome Mot."
             }
         ) {
             public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 0 ? Long.class : String.class;
+            }
         });
         jScrollPane1.setViewportView(tblDados);
 
@@ -172,6 +240,12 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(evt -> salvarVeiculo());
 
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(evt -> editarVeiculo());
+
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(evt -> excluirVeiculo());
+
         javax.swing.GroupLayout painelFormLayout = new javax.swing.GroupLayout(painelForm);
         painelForm.setLayout(painelFormLayout);
 
@@ -182,46 +256,51 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
                     .addGroup(painelFormLayout.createSequentialGroup()
                         .addComponent(lblPlaca).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtPlaca, 80, 80, 80)
-                        .addGap(18)
+                        .addGap(10)
                         .addComponent(lblStatus).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtStatus, 80, 80, 80)
-                        .addGap(18)
+                        .addGap(10)
                         .addComponent(lblMunicipio).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbMunicipio, 120, 120, 120)
-                        .addGap(18)
+                        .addGap(10)
                         .addComponent(lblUF).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtUF, 30, 30, 30))
-                    .addGroup(painelFormLayout.createSequentialGroup()
-                        .addComponent(lblMarca).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMarca, 100, 100, 100)
-                        .addGap(18)
-                        .addComponent(lblModelo).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtModelo, 120, 120, 120)
-                        .addGap(18)
-                        .addComponent(lblAnoFab).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAnoFab, 60, 60, 60)
-                        .addGap(18)
-                        .addComponent(lblAnoMod).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAnoMod, 60, 60, 60)
-                        .addGap(18)
+                        .addComponent(txtUF, 30, 30, 30)
+                        .addGap(10)
                         .addComponent(lblCor).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbCor, 80, 80, 80))
                     .addGroup(painelFormLayout.createSequentialGroup()
+                        .addComponent(lblMarca).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMarca, 100, 100, 100)
+                        .addGap(10)
+                        .addComponent(lblModelo).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtModelo, 120, 120, 120)
+                        .addGap(10)
+                        .addComponent(lblAnoFab).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtAnoFab, 60, 60, 60)
+                        .addGap(10)
+                        .addComponent(lblAnoMod).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtAnoMod, 60, 60, 60))
+                    .addGroup(painelFormLayout.createSequentialGroup()
                         .addComponent(lblChassi).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtChassi, 180, 180, 180)
-                        .addGap(18)
+                        .addGap(10)
                         .addComponent(lblRenavam).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtRenavam, 100, 100, 100)
-                        .addGap(18)
+                        .addGap(10)
                         .addComponent(lblTipoVeiculo).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbTipoVeiculo, 120, 120, 120))
                     .addGroup(painelFormLayout.createSequentialGroup()
                         .addComponent(lblProprietario).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbProprietario, 160, 160, 160)
-                        .addGap(18)
+                        .addGap(10)
                         .addComponent(lblMotorista).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbMotorista, 160, 160, 160))
-                    .addComponent(btnSalvar))
+                    .addGroup(painelFormLayout.createSequentialGroup()
+                        .addComponent(btnSalvar)
+                        .addGap(10)
+                        .addComponent(btnEditar)
+                        .addGap(10)
+                        .addComponent(btnExcluir)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -231,14 +310,14 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
                     .addComponent(lblPlaca)  .addComponent(txtPlaca)
                     .addComponent(lblStatus) .addComponent(txtStatus)
                     .addComponent(lblMunicipio) .addComponent(cbMunicipio)
-                    .addComponent(lblUF)  .addComponent(txtUF))
+                    .addComponent(lblUF)  .addComponent(txtUF)
+                    .addComponent(lblCor) .addComponent(cbCor))
                 .addGap(8)
                 .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMarca) .addComponent(txtMarca)
                     .addComponent(lblModelo).addComponent(txtModelo)
                     .addComponent(lblAnoFab).addComponent(txtAnoFab)
-                    .addComponent(lblAnoMod).addComponent(txtAnoMod)
-                    .addComponent(lblCor)   .addComponent(cbCor))
+                    .addComponent(lblAnoMod).addComponent(txtAnoMod))
                 .addGap(8)
                 .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblChassi) .addComponent(txtChassi)
@@ -249,7 +328,10 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
                     .addComponent(lblProprietario).addComponent(cbProprietario)
                     .addComponent(lblMotorista).addComponent(cbMotorista))
                 .addGap(12)
-                .addComponent(btnSalvar)
+                .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSalvar)
+                    .addComponent(btnEditar)
+                    .addComponent(btnExcluir))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -265,7 +347,7 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(painelForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
         );
 
         pack();
@@ -273,6 +355,8 @@ public class FrmVeiculo extends javax.swing.JInternalFrame {
 
     // ==== Declaração de variáveis ==== //
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblDados;
     private javax.swing.JPanel painelForm;

@@ -8,17 +8,242 @@
     <Property name="resizable" type="boolean" value="true"/>
     <Property name="title" type="java.lang.String" value="Cadastro de Veículo"/>
     <Property name="visible" type="boolean" value="false"/>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.modules.form.editors.DimensionEditor">
+      <Dimension value="950,350"/>
+    </Property>
   </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
   <Layout>
     <DimensionLayout dim="0">
-      <Group type="103" groupAlignment="0" attributes="0">
-        <EmptySpace max="32767" attributes="0"/>
+      <Group type="103" groupAlignment="0">
+        <Group type="102" alignment="0">
+          <EmptySpace min="6" pref="6" max="32767"/>
+          <Component id="painelForm" min="-2" pref="325" max="-2" attributes="0"/>
+          <EmptySpace min="6" pref="6" max="32767"/>
+        </Group>
+        <Component id="jScrollPane1" min="-2" pref="600" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
-      <Group type="103" groupAlignment="0" attributes="0">
-        <EmptySpace pref="300" max="32767" min="10" attributes="0"/>
+      <Group type="103" groupAlignment="0">
+        <Group type="102" alignment="0">
+          <Component id="painelForm" min="-2" pref="140" max="-2" attributes="0"/>
+          <EmptySpace min="6" pref="6" max="32767"/>
+          <Component id="jScrollPane1" min="-2" pref="190" max="-2" attributes="0"/>
+        </Group>
       </Group>
     </DimensionLayout>
   </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="painelForm">
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0">
+            <Group type="102" alignment="0">
+              <EmptySpace min="10" pref="10" max="32767"/>
+              <Component id="lblPlaca"/>
+              <Component id="txtPlaca" min="70" pref="80" max="32767"/>
+              <Component id="lblStatus"/>
+              <Component id="txtStatus" min="70" pref="80" max="32767"/>
+              <Component id="lblMunicipio"/>
+              <Component id="cbMunicipio" min="100" pref="120" max="32767"/>
+              <Component id="lblUF"/>
+              <Component id="txtUF" min="30" pref="30" max="32767"/>
+              <Component id="lblCor"/>
+              <Component id="cbCor" min="70" pref="80" max="32767"/>
+            </Group>
+            <Group type="102" alignment="0">
+              <EmptySpace min="10" pref="10" max="32767"/>
+              <Component id="lblMarca"/>
+              <Component id="txtMarca" min="90" pref="100" max="32767"/>
+              <Component id="lblModelo"/>
+              <Component id="txtModelo" min="110" pref="120" max="32767"/>
+              <Component id="lblAnoFab"/>
+              <Component id="txtAnoFab" min="60" pref="60" max="32767"/>
+              <Component id="lblAnoMod"/>
+              <Component id="txtAnoMod" min="60" pref="60" max="32767"/>
+            </Group>
+            <Group type="102" alignment="0">
+              <EmptySpace min="10" pref="10" max="32767"/>
+              <Component id="lblChassi"/>
+              <Component id="txtChassi" min="160" pref="180" max="32767"/>
+              <Component id="lblRenavam"/>
+              <Component id="txtRenavam" min="90" pref="100" max="32767"/>
+              <Component id="lblTipoVeiculo"/>
+              <Component id="cbTipoVeiculo" min="100" pref="120" max="32767"/>
+            </Group>
+            <Group type="102" alignment="0">
+              <EmptySpace min="10" pref="10" max="32767"/>
+              <Component id="lblProprietario"/>
+              <Component id="cbProprietario" min="140" pref="160" max="32767"/>
+              <Component id="lblMotorista"/>
+              <Component id="cbMotorista" min="140" pref="160" max="32767"/>
+            </Group>
+            <Group type="102" alignment="0">
+              <EmptySpace min="10" pref="10" max="32767"/>
+              <Component id="btnSalvar"/>
+              <Component id="btnEditar"/>
+              <Component id="btnExcluir"/>
+            </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0">
+            <Group type="102" alignment="0">
+              <EmptySpace min="10" pref="10" max="32767"/>
+              <Group type="103" groupAlignment="1">
+                <Component id="lblPlaca" alignment="1"/>
+                <Component id="txtPlaca" alignment="1"/>
+                <Component id="lblStatus" alignment="1"/>
+                <Component id="txtStatus" alignment="1"/>
+                <Component id="lblMunicipio" alignment="1"/>
+                <Component id="cbMunicipio" alignment="1"/>
+                <Component id="lblUF" alignment="1"/>
+                <Component id="txtUF" alignment="1"/>
+                <Component id="lblCor" alignment="1"/>
+                <Component id="cbCor" alignment="1"/>
+              </Group>
+              <EmptySpace min="8" pref="8" max="32767"/>
+              <Group type="103" groupAlignment="1">
+                <Component id="lblMarca" alignment="1"/>
+                <Component id="txtMarca" alignment="1"/>
+                <Component id="lblModelo" alignment="1"/>
+                <Component id="txtModelo" alignment="1"/>
+                <Component id="lblAnoFab" alignment="1"/>
+                <Component id="txtAnoFab" alignment="1"/>
+                <Component id="lblAnoMod" alignment="1"/>
+                <Component id="txtAnoMod" alignment="1"/>
+              </Group>
+              <EmptySpace min="8" pref="8" max="32767"/>
+              <Group type="103" groupAlignment="1">
+                <Component id="lblChassi" alignment="1"/>
+                <Component id="txtChassi" alignment="1"/>
+                <Component id="lblRenavam" alignment="1"/>
+                <Component id="txtRenavam" alignment="1"/>
+                <Component id="lblTipoVeiculo" alignment="1"/>
+                <Component id="cbTipoVeiculo" alignment="1"/>
+              </Group>
+              <EmptySpace min="8" pref="8" max="32767"/>
+              <Group type="103" groupAlignment="1">
+                <Component id="lblProprietario" alignment="1"/>
+                <Component id="cbProprietario" alignment="1"/>
+                <Component id="lblMotorista" alignment="1"/>
+                <Component id="cbMotorista" alignment="1"/>
+              </Group>
+              <EmptySpace min="10" pref="10" max="32767"/>
+              <Group type="103" groupAlignment="1">
+                <Component id="btnSalvar" alignment="1"/>
+                <Component id="btnEditar" alignment="1"/>
+                <Component id="btnExcluir" alignment="1"/>
+              </Group>
+              <EmptySpace min="10" pref="10" max="32767"/>
+            </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblPlaca">
+          <Properties><Property name="text" type="java.lang.String" value="Placa*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPlaca"/>
+        <Component class="javax.swing.JLabel" name="lblStatus">
+          <Properties><Property name="text" type="java.lang.String" value="Status:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtStatus"/>
+        <Component class="javax.swing.JLabel" name="lblMunicipio">
+          <Properties><Property name="text" type="java.lang.String" value="Município*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbMunicipio"/>
+        <Component class="javax.swing.JLabel" name="lblUF">
+          <Properties><Property name="text" type="java.lang.String" value="UF:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtUF"/>
+        <Component class="javax.swing.JLabel" name="lblCor">
+          <Properties><Property name="text" type="java.lang.String" value="Cor*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbCor"/>
+        <Component class="javax.swing.JLabel" name="lblMarca">
+          <Properties><Property name="text" type="java.lang.String" value="Marca*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtMarca"/>
+        <Component class="javax.swing.JLabel" name="lblModelo">
+          <Properties><Property name="text" type="java.lang.String" value="Modelo*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtModelo"/>
+        <Component class="javax.swing.JLabel" name="lblAnoFab">
+          <Properties><Property name="text" type="java.lang.String" value="Ano Fab.:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtAnoFab"/>
+        <Component class="javax.swing.JLabel" name="lblAnoMod">
+          <Properties><Property name="text" type="java.lang.String" value="Ano Mod.:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtAnoMod"/>
+        <Component class="javax.swing.JLabel" name="lblChassi">
+          <Properties><Property name="text" type="java.lang.String" value="Número Chassi:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtChassi"/>
+        <Component class="javax.swing.JLabel" name="lblRenavam">
+          <Properties><Property name="text" type="java.lang.String" value="Renavam*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtRenavam"/>
+        <Component class="javax.swing.JLabel" name="lblTipoVeiculo">
+          <Properties><Property name="text" type="java.lang.String" value="Tipo Veículo*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbTipoVeiculo"/>
+        <Component class="javax.swing.JLabel" name="lblProprietario">
+          <Properties><Property name="text" type="java.lang.String" value="Proprietário*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbProprietario"/>
+        <Component class="javax.swing.JLabel" name="lblMotorista">
+          <Properties><Property name="text" type="java.lang.String" value="Motorista*:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbMotorista"/>
+        <Component class="javax.swing.JButton" name="btnSalvar">
+          <Properties><Property name="text" type="java.lang.String" value="Salvar"/></Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnEditar">
+          <Properties><Property name="text" type="java.lang.String" value="Editar"/></Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnExcluir">
+          <Properties><Property name="text" type="java.lang.String" value="Excluir"/></Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTable" name="tblDados">
+          <Properties>
+            <Property name="model" type="javax.swing.table.DefaultTableModel" editor="org.netbeans.modules.form.editors.TableModelEditor">
+              <Table columnCount="17" rowCount="0">
+                <Column editable="false" title="ID"/>
+                <Column editable="false" title="Placa"/>
+                <Column editable="false" title="Status"/>
+                <Column editable="false" title="Município"/>
+                <Column editable="false" title="UF"/>
+                <Column editable="false" title="Marca"/>
+                <Column editable="false" title="Modelo"/>
+                <Column editable="false" title="Ano Fab."/>
+                <Column editable="false" title="Ano Mod."/>
+                <Column editable="false" title="Cor"/>
+                <Column editable="false" title="Chassi"/>
+                <Column editable="false" title="Renavam"/>
+                <Column editable="false" title="Tipo"/>
+                <Column editable="false" title="ID Prop."/>
+                <Column editable="false" title="Nome Prop."/>
+                <Column editable="false" title="ID Mot."/>
+                <Column editable="false" title="Nome Mot."/>
+              </Table>
+            </Property>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
 </Form>

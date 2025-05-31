@@ -127,4 +127,9 @@ public class Veiculo implements Serializable {
 
     public LocalDate getDtAquisicao() { return dtAquisicao; }
     public void setDtAquisicao(LocalDate dtAquisicao) { this.dtAquisicao = dtAquisicao; }
+
+    @Override
+    public String toString() {
+        return placa != null ? placa : "";
+    }
 }

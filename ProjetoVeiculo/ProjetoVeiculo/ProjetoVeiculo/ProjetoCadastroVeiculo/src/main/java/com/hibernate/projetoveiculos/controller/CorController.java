@@ -11,22 +11,22 @@ public class CorController {
 
     private final CorDAO dao = new CorDAO();
 
+    /** Salva ou atualiza uma cor. */
     public void salvar(Cor cor) {
-        dao.salvar(cor);
+        dao.salvarOuAtualizar(cor);
     }
 
-    public void atualizar(Cor cor) {
-        dao.atualizar(cor);
+    /** Exclui cor pelo ID. */
+    public void excluir(Long id) {
+        dao.excluir(id);
     }
 
-    public void excluir(Cor cor) {
-        dao.excluir(cor);
-    }
-
+    /** Lista todas as cores. */
     public List<Cor> listar() {
         return dao.listar();
     }
 
+    /** Busca uma cor pelo ID. */
     public Cor buscarPorId(Long id) {
         return dao.buscarPorId(id);
     }

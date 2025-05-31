@@ -1,9 +1,9 @@
 package com.hibernate.projetoveiculos.view;
 
-import com.hibernate.projetoveiculos.controller.PessoaController;
-import com.hibernate.projetoveiculos.model.Pessoa;
+import com.hibernate.projetoveiculos.controller.*;
+import com.hibernate.projetoveiculos.model.*;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -12,32 +12,57 @@ import javax.swing.table.DefaultTableModel;
 public class FrmPessoa extends javax.swing.JInternalFrame {
 
     private final PessoaController controller = new PessoaController();
+    private final MunicipioController municipioController = new MunicipioController();
 
     public FrmPessoa() {
         initComponents();
+        carregarMunicipios();
         listar();
+    }
+
+    private void carregarMunicipios() {
+        cbMunicipio.removeAllItems();
+        for (Municipio m : municipioController.listar()) {
+            cbMunicipio.addItem(m);
+        }
     }
 
     private void listar() {
         List<Pessoa> lista = controller.listar();
         DefaultTableModel dtm = (DefaultTableModel) tblDados.getModel();
         dtm.setRowCount(0);
-        for (Pessoa m : lista) {
-            dtm.addRow(new Object[]{m.getNome(), m.getCpf(), m.getMunicipio().getNome()});
+        for (Pessoa p : lista) {
+            String doc = (p.getTipo() != null && p.getTipo().equals("J")) ? p.getCnpj() : p.getCpf();
+            String tipo = (p.getTipo() != null && p.getTipo().equals("J")) ? "Jurídica" : "Física";
+            dtm.addRow(new Object[]{
+                p.getNome(),
+                tipo,
+                doc,
+                p.getMunicipio() != null ? p.getMunicipio().getNome() : ""
+            });
         }
     }
 
     private void salvar() {
         try {
-            Pessoa m = new Pessoa();
-            m.setNome(txtNome.getText());
-            m.setCpf(txtCpf.getText());
-            // TODO: demais campos
-            controller.salvar(m);
+            Pessoa p = new Pessoa();
+            p.setNome(txtNome.getText().trim());
+            String tipo = cbTipoPessoa.getSelectedItem().toString();
+            if (tipo.equals("Jurídica")) {
+                p.setTipo("J");
+                p.setCnpj(txtDocumento.getText().trim());
+                p.setCpf(null);
+            } else {
+                p.setTipo("F");
+                p.setCpf(txtDocumento.getText().trim());
+                p.setCnpj(null);
+            }
+            p.setMunicipio((Municipio) cbMunicipio.getSelectedItem());
+            controller.salvar(p);
             listar();
             JOptionPane.showMessageDialog(this, "Registro salvo.");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + ex.getMessage());
         }
     }
 
@@ -47,10 +72,15 @@ public class FrmPessoa extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDados = new javax.swing.JTable();
         painelForm = new javax.swing.JPanel();
+
         lblNome = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
-        lblCpf = new javax.swing.JLabel();
-        txtCpf = new javax.swing.JTextField();
+        lblTipoPessoa = new javax.swing.JLabel();
+        cbTipoPessoa = new javax.swing.JComboBox<>();
+        lblDocumento = new javax.swing.JLabel();
+        txtDocumento = new javax.swing.JTextField();
+        lblMunicipio = new javax.swing.JLabel();
+        cbMunicipio = new javax.swing.JComboBox<>();
         btnSalvar = new javax.swing.JButton();
 
         setClosable(true);
@@ -61,7 +91,7 @@ public class FrmPessoa extends javax.swing.JInternalFrame {
 
         tblDados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
-            new String [] { "Nome", "CPF", "Cidade" }
+            new String [] { "Nome", "Tipo", "CPF/CNPJ", "Cidade" }
         ) {
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return false;
@@ -70,7 +100,10 @@ public class FrmPessoa extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(tblDados);
 
         lblNome.setText("Nome:");
-        lblCpf.setText("CPF:");
+        lblTipoPessoa.setText("Tipo:");
+        cbTipoPessoa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Física", "Jurídica" }));
+        lblDocumento.setText("CPF/CNPJ:");
+        lblMunicipio.setText("Município:");
 
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(evt -> salvar());
@@ -83,12 +116,20 @@ public class FrmPessoa extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(lblNome)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblCpf)
+                .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12)
+                .addComponent(lblTipoPessoa)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbTipoPessoa, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12)
+                .addComponent(lblDocumento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12)
+                .addComponent(lblMunicipio)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbMunicipio, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12)
                 .addComponent(btnSalvar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -99,8 +140,12 @@ public class FrmPessoa extends javax.swing.JInternalFrame {
                 .addGroup(painelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNome)
                     .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCpf)
-                    .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTipoPessoa)
+                    .addComponent(cbTipoPessoa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDocumento)
+                    .addComponent(txtDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMunicipio)
+                    .addComponent(cbMunicipio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSalvar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -126,11 +171,11 @@ public class FrmPessoa extends javax.swing.JInternalFrame {
     // Variables declaration
     private javax.swing.JButton btnSalvar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblCpf;
-    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblNome, lblTipoPessoa, lblDocumento, lblMunicipio;
     private javax.swing.JPanel painelForm;
     private javax.swing.JTable tblDados;
-    private javax.swing.JTextField txtCpf;
-    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtNome, txtDocumento;
+    private javax.swing.JComboBox<String> cbTipoPessoa;
+    private javax.swing.JComboBox<Municipio> cbMunicipio;
     // End of variables declaration
 }

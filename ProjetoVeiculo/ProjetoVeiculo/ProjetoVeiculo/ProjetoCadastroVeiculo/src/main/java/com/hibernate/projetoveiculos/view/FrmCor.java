@@ -23,14 +23,14 @@ public class FrmCor extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel) tblDados.getModel();
         dtm.setRowCount(0);
         for (Cor c : lista) {
-            dtm.addRow(new Object[]{c.getDescricao()});
+            dtm.addRow(new Object[]{c.getId(), c.getDescricao()});
         }
     }
 
     private void salvar() {
         try {
             Cor c = new Cor();
-            c.setDescricao(txtDescricao.getText());
+            c.setDescricao(txtDescricao.getText().trim());
             controller.salvar(c);
             listar();
             JOptionPane.showMessageDialog(this, "Cor salva.");
@@ -57,7 +57,7 @@ public class FrmCor extends javax.swing.JInternalFrame {
 
         tblDados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
-            new String [] { "Descrição" }
+            new String [] { "ID", "Descrição" }
         ) {
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return false;

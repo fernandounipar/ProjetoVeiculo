@@ -1,36 +1,32 @@
 package com.hibernate.projetoveiculos.model;
 
-import java.io.Serializable;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "pessoa")
 public class Pessoa implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 80, nullable = false)
+    @Column(length = 60, nullable = false)
     private String nome;
 
-    @Column(length = 14, unique = true)
+    @Column(length = 14) // CPF: 11, CNPJ: 14
     private String cpf;
+
+    @Column(length = 18)
+    private String cnpj;
+
+    @Column(length = 1)
+    private String tipo; // "F" - Física, "J" - Jurídica
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "municipio_id")
     private Municipio municipio;
 
-    /* getters / setters */
+    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -40,6 +36,17 @@ public class Pessoa implements Serializable {
     public String getCpf() { return cpf; }
     public void setCpf(String cpf) { this.cpf = cpf; }
 
+    public String getCnpj() { return cnpj; }
+    public void setCnpj(String cnpj) { this.cnpj = cnpj; }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
+
     public Municipio getMunicipio() { return municipio; }
     public void setMunicipio(Municipio municipio) { this.municipio = municipio; }
+
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

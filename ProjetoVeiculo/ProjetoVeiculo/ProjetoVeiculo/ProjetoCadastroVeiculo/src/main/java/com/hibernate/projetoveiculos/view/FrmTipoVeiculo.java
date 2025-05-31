@@ -23,24 +23,28 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel) tblDados.getModel();
         dtm.setRowCount(0);
         for (TipoVeiculo t : lista) {
-            dtm.addRow(new Object[]{t.getDescricao(), t.getCategoria()});
+            dtm.addRow(new Object[]{
+                t.getId(),
+                t.getDescricao(),
+                t.getCategoria()
+            });
         }
     }
 
     private void salvar() {
         try {
             TipoVeiculo t = new TipoVeiculo();
-            t.setDescricao(txtDescricao.getText());
-            t.setCategoria(txtCategoria.getText());
+            t.setDescricao(txtDescricao.getText().trim());
+            t.setCategoria(txtCategoria.getText().trim());
             controller.salvar(t);
             listar();
             JOptionPane.showMessageDialog(this, "Tipo de veículo salvo.");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -60,7 +64,7 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
 
         tblDados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
-            new String [] { "Descrição", "Categoria" }
+            new String [] { "ID", "Descrição", "Categoria" }
         ) {
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return false;
@@ -87,7 +91,7 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
                 .addComponent(lblCategoria)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSalvar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -120,7 +124,7 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold>
 
     // Variables declaration
     private javax.swing.JButton btnSalvar;

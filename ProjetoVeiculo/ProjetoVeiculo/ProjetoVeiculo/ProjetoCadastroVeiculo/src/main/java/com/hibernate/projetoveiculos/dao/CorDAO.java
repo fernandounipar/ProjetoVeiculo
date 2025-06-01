@@ -45,11 +45,11 @@ public class CorDAO {
         }
     }
 
-    /** Lista todas as cores ordenadas por descrição. */
+    /** Lista todas as cores ordenadas por ID. */
     @SuppressWarnings("unchecked")
     public List<Cor> listar() {
         try (Session s = HibernateUtil.getSession()) {
-            return s.createQuery("from Cor order by descricao").list();
+            return s.createQuery("from Cor order by id").list();
         }
     }
 

@@ -35,7 +35,7 @@ public class PessoaDAO {
     @SuppressWarnings("unchecked")
     public List<Pessoa> listar() {
         try (Session s = HibernateUtil.getSession()) {
-            return s.createQuery("from Pessoa order by nome").list();
+            return s.createQuery("select p from Pessoa p left join fetch p.municipio order by p.nome").list();
         }
     }
 

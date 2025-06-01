@@ -12,10 +12,20 @@ import javax.swing.table.DefaultTableModel;
 public class FrmMunicipio extends javax.swing.JInternalFrame {
 
     private final MunicipioController controller = new MunicipioController();
+    private String codigoEdicao = null; // Para edição
 
     public FrmMunicipio() {
         initComponents();
         listar();
+        btnEditar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        tblDados.getSelectionModel().addListSelectionListener(e -> atualizarBotoes());
+    }
+
+    private void atualizarBotoes() {
+        boolean selecionado = tblDados.getSelectedRow() >= 0;
+        btnEditar.setEnabled(selecionado);
+        btnExcluir.setEnabled(selecionado);
     }
 
     private void listar() {
@@ -30,18 +40,70 @@ public class FrmMunicipio extends javax.swing.JInternalFrame {
     private void salvar() {
         try {
             Municipio m = new Municipio();
-            m.setCodIbge(txtCodigo.getText());
-            m.setNome(txtNome.getText());
-            m.setUf(txtUf.getText().toUpperCase());
-            controller.salvar(m);
+            m.setCodIbge(txtCodigo.getText().trim());
+            m.setNome(txtNome.getText().trim());
+            m.setUf(txtUf.getText().toUpperCase().trim());
+
+            if (codigoEdicao == null) {
+                controller.salvar(m);
+                JOptionPane.showMessageDialog(this, "Município salvo.");
+            } else {
+                controller.atualizar(m);
+                JOptionPane.showMessageDialog(this, "Município atualizado.");
+                codigoEdicao = null;
+            }
+            limparCampos();
             listar();
-            JOptionPane.showMessageDialog(this, "Município salvo.");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    private void editar() {
+        int row = tblDados.getSelectedRow();
+        if (row >= 0) {
+            String codigo = tblDados.getValueAt(row, 0).toString();
+            String nome = tblDados.getValueAt(row, 1).toString();
+            String uf = tblDados.getValueAt(row, 2).toString();
+
+            txtCodigo.setText(codigo);
+            txtNome.setText(nome);
+            txtUf.setText(uf);
+
+            txtCodigo.setEnabled(false);
+            codigoEdicao = codigo;
+        }
+    }
+
+   private void excluir() {
+    int row = tblDados.getSelectedRow();
+    if (row >= 0) {
+        String codigo = tblDados.getValueAt(row, 0).toString();
+        int confirm = JOptionPane.showConfirmDialog(this, "Confirma a exclusão do município selecionado?", "Excluir", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            Municipio municipio = controller.buscarPorCodigoIbge(codigo);
+            if (municipio != null) {
+                controller.excluir(municipio);
+                listar();
+                JOptionPane.showMessageDialog(this, "Município excluído.");
+                limparCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Município não encontrado.");
+            }
+        }
+    }
+}
+
+    private void limparCampos() {
+        txtCodigo.setText("");
+        txtNome.setText("");
+        txtUf.setText("");
+        txtCodigo.setEnabled(true);
+        tblDados.clearSelection();
+        atualizarBotoes();
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -54,6 +116,8 @@ public class FrmMunicipio extends javax.swing.JInternalFrame {
         lblUf = new javax.swing.JLabel();
         txtUf = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -78,6 +142,14 @@ public class FrmMunicipio extends javax.swing.JInternalFrame {
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(evt -> salvar());
 
+        btnEditar.setText("Editar");
+        btnEditar.setEnabled(false);
+        btnEditar.addActionListener(evt -> editar());
+
+        btnExcluir.setText("Excluir");
+        btnExcluir.setEnabled(false);
+        btnExcluir.addActionListener(evt -> excluir());
+
         javax.swing.GroupLayout painelFormLayout = new javax.swing.GroupLayout(painelForm);
         painelForm.setLayout(painelFormLayout);
         painelFormLayout.setHorizontalGroup(
@@ -95,8 +167,12 @@ public class FrmMunicipio extends javax.swing.JInternalFrame {
                 .addComponent(lblUf)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUf, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnSalvar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEditar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExcluir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelFormLayout.setVerticalGroup(
@@ -110,7 +186,9 @@ public class FrmMunicipio extends javax.swing.JInternalFrame {
                     .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUf)
                     .addComponent(txtUf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSalvar))
+                    .addComponent(btnSalvar)
+                    .addComponent(btnEditar)
+                    .addComponent(btnExcluir))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -130,10 +208,12 @@ public class FrmMunicipio extends javax.swing.JInternalFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold>
 
     // Variables declaration
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblNome;

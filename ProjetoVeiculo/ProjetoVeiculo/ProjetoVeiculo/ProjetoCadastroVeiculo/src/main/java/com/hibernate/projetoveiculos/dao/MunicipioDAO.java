@@ -39,4 +39,13 @@ public class MunicipioDAO {
             return s.get(Municipio.class, id);
         }
     }
+
+    // Adicionado: Buscar pelo código do IBGE
+    public Municipio buscarPorCodigoIbge(String codigo) {
+        try (Session s = HibernateUtil.getSession()) {
+            return (Municipio) s.createQuery("from Municipio where codIbge = :codigo")
+                    .setParameter("codigo", codigo)
+                    .uniqueResult();
+        }
+    }
 }

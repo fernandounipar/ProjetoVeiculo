@@ -61,6 +61,10 @@
               <Component id="txtCategoria" min="90" pref="120" max="32767" attributes="0"/>
               <EmptySpace min="8" pref="8" max="32767"/>
               <Component id="btnSalvar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="4" pref="4" max="32767"/>
+              <Component id="btnEditar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="4" pref="4" max="32767"/>
+              <Component id="btnExcluir" min="-2" max="-2" attributes="0"/>
             </Group>
           </Group>
         </DimensionLayout>
@@ -74,6 +78,8 @@
                 <Component id="lblCategoria" alignment="1" min="-2" max="-2" attributes="0"/>
                 <Component id="txtCategoria" alignment="1" min="-2" max="-2" attributes="0"/>
                 <Component id="btnSalvar" alignment="1" min="-2" max="-2" attributes="0"/>
+                <Component id="btnEditar" alignment="1" min="-2" max="-2" attributes="0"/>
+                <Component id="btnExcluir" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="10" pref="10" max="32767"/>
             </Group>
@@ -96,6 +102,16 @@
         <Component class="javax.swing.JButton" name="btnSalvar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Salvar"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnEditar">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Editar"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnExcluir">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Excluir"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -31,4 +31,15 @@ public class VeiculoController {
     public Veiculo buscarPorId(Long id) {
         return dao.buscarPorId(id);
     }
+
+    public boolean renavamJaExiste(String renavam, Long idAtual) {
+        Veiculo v = dao.buscarPorRenavam(renavam);
+        return v != null && (idAtual == null || !v.getId().equals(idAtual));
+    }
+
+    public boolean chassiJaExiste(String chassi, Long idAtual) {
+        Veiculo v = dao.buscarPorChassi(chassi);
+        return v != null && (idAtual == null || !v.getId().equals(idAtual));
+    }
+
 }

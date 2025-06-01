@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
 
     private final TipoVeiculoController controller = new TipoVeiculoController();
+    private Long idEdicao = null; // controla edição
 
     public FrmTipoVeiculo() {
         initComponents();
@@ -29,19 +30,63 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
                 t.getCategoria()
             });
         }
+        limparCampos();
     }
 
     private void salvar() {
         try {
-            TipoVeiculo t = new TipoVeiculo();
+            TipoVeiculo t = (idEdicao == null) ? new TipoVeiculo() : controller.buscarPorId(idEdicao);
             t.setDescricao(txtDescricao.getText().trim());
             t.setCategoria(txtCategoria.getText().trim());
-            controller.salvar(t);
+            if (idEdicao == null) {
+                controller.salvar(t);
+                JOptionPane.showMessageDialog(this, "Tipo de veículo salvo.");
+            } else {
+                controller.atualizar(t);
+                JOptionPane.showMessageDialog(this, "Tipo de veículo atualizado.");
+            }
             listar();
-            JOptionPane.showMessageDialog(this, "Tipo de veículo salvo.");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
         }
+    }
+
+    private void editar() {
+        int row = tblDados.getSelectedRow();
+        if (row >= 0) {
+            idEdicao = (Long) tblDados.getValueAt(row, 0);
+            TipoVeiculo t = controller.buscarPorId(idEdicao);
+            if (t != null) {
+                txtDescricao.setText(t.getDescricao());
+                txtCategoria.setText(t.getCategoria());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um tipo de veículo para editar.");
+        }
+    }
+
+    private void excluir() {
+        int row = tblDados.getSelectedRow();
+        if (row >= 0) {
+            Long id = (Long) tblDados.getValueAt(row, 0);
+            int confirm = JOptionPane.showConfirmDialog(this, "Confirma a exclusão do tipo de veículo?", "Excluir", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                TipoVeiculo t = controller.buscarPorId(id);
+                if (t != null) {
+                    controller.excluir(t);
+                    listar();
+                    JOptionPane.showMessageDialog(this, "Tipo de veículo excluído.");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um tipo de veículo para excluir.");
+        }
+    }
+
+    private void limparCampos() {
+        idEdicao = null;
+        txtDescricao.setText("");
+        txtCategoria.setText("");
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
@@ -55,6 +100,8 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
         lblCategoria = new javax.swing.JLabel();
         txtCategoria = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -78,6 +125,12 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(evt -> salvar());
 
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(evt -> editar());
+
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(evt -> excluir());
+
         javax.swing.GroupLayout painelFormLayout = new javax.swing.GroupLayout(painelForm);
         painelForm.setLayout(painelFormLayout);
         painelFormLayout.setHorizontalGroup(
@@ -87,12 +140,16 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
                 .addComponent(lblDescricao)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(18)
                 .addComponent(lblCategoria)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(18)
                 .addComponent(btnSalvar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEditar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExcluir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelFormLayout.setVerticalGroup(
@@ -104,7 +161,9 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
                     .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCategoria)
                     .addComponent(txtCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSalvar))
+                    .addComponent(btnSalvar)
+                    .addComponent(btnEditar)
+                    .addComponent(btnExcluir))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -128,6 +187,8 @@ public class FrmTipoVeiculo extends javax.swing.JInternalFrame {
 
     // Variables declaration
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCategoria;
     private javax.swing.JLabel lblDescricao;

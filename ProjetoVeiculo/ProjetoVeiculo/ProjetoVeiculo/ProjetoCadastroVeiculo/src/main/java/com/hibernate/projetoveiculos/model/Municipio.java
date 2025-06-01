@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "municipio")
@@ -26,16 +25,56 @@ public class Municipio implements Serializable {
     @Column(length = 2, nullable = false)
     private String uf;
 
-    /* getters / setters */
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters / setters
+    public Long getId() {
+        return id;
+    }
 
-    public String getCodIbge() { return codIbge; }
-    public void setCodIbge(String codIbge) { this.codIbge = codIbge; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public String getCodIbge() {
+        return codIbge;
+    }
 
-    public String getUf() { return uf; }
-    public void setUf(String uf) { this.uf = uf; }
+    public void setCodIbge(String codIbge) {
+        this.codIbge = codIbge;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " - " + uf;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Municipio that = (Municipio) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }

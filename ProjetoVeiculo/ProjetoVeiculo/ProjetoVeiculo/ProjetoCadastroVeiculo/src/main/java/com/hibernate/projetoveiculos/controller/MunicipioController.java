@@ -30,4 +30,9 @@ public class MunicipioController {
     public Municipio buscarPorId(Long id) {
         return dao.buscarPorId(id);
     }
+
+    // Implementação correta:
+    public Municipio buscarPorCodigoIbge(String codigo) {
+        return dao.buscarPorCodigoIbge(codigo);
+    }
 }
